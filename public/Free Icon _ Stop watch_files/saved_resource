@@ -1,0 +1,56 @@
+
+        !(function(){
+            var paAnalytics = paAnalytics || [];
+
+            var loadScript = function(url, onLoad){
+                var script = document.createElement('script');
+                script.setAttribute('src', url);
+                script.onload = onLoad;
+                var target = document.getElementsByTagName('head')[0];
+                target.insertBefore(script, target.firstChild);
+                script.onerror = function (error) {
+                    paAnalytics.push([
+                        'track',
+                        {eventName:'adTagError', properties: {errCode:2}}
+                    ]);
+                };
+            };
+
+            var config = {"_id":"6123a360391c447f1a1018f5","paid":16490,"anid":22270798,"placement_name":"freepik.com_ros_728x90","publisher_id":1119064,"site_id":5696053,"size":"728x90","tag_type":"prebid","hbConf":{"bidders":[{"type":"appnexus","params":"{\"placementId\":\"22270798\"}"},{"type":"openx","params":"{\"unit\":\"545663786\"}"},{"type":"smart","params":"{\"pageId\":\"1438231\",\"formatId\":\"47773\",\"isSecure\":true,\"siteId\":\"372800\"}"},{"type":"pubmatic","params":"{\"adSlot\":\"4016907@728x90\"}"},{"type":"rubicon","params":"{\"accountId\":\"21034\",\"zoneId\":\"2142104\",\"siteId\":\"288844\",\"sizes\":\"2\"}"}],"psbk":"<div id='taboola-22270798'></div>  \n<script type=\"text/javascript\">  \n    window._taboola = window._taboola || [];\n    _taboola.push({article:'auto'});  \n    _taboola.push({mode:'thumbnails-a', container:'taboola-22270798', placement:'22270798', target_type: 'mix'});  \n    !function (e, f, u, i) { if (!document.getElementById(i)){ e.async = 1; e.src = u; e.id = i; f.parentNode.insertBefore(e, f); } }(document.createElement('script'),  \n    document.getElementsByTagName('script')[0], '//cdn.taboola.com/libtrc/freepik728x90gr-r22270798/loader.js');\n</script>","timeout":2000,"adxPsbkType":"no_psbk"},"isInArticle":false,"placement_site_info":[{"sco":{"paSellerId":"100489","paOwns":"Operated Only"}}]};
+            config['currentScript'] = document.currentScript ? document.currentScript : null;
+
+            if (config.analytics && config.analytics != {} && config.analytics.trackEnabled) {
+                paAnalytics.push([
+                    'init',
+                    config.analytics
+                ]);
+                paAnalytics.push(['track', { eventName: 'adtagLoaded' }]);
+    
+                loadScript(
+                    'https://cdn.projectagora-analytics-library.com/main/latest/analytics.min.js',
+                    function () {
+                        if (typeof paAnalytics !== 'undefined') {
+                            var temp = paAnalytics.slice();
+                            paAnalytics = new analytics.PaAnalytics();
+                            paAnalytics.push.apply(paAnalytics, temp);
+                        } else {
+                            paAnalytics = new analytics.PaAnalytics();
+                        }
+                    }
+                );
+            }
+
+            if (typeof PAv2 === 'function'){
+                paAnalytics.push(['track', { eventName: 'adtagStarted' }]);
+                config.analytics = paAnalytics;
+                var myPAv2Ad = new PAv2(config);
+                myPAv2Ad.display();
+            }else {
+                loadScript('https://cdn.projectagora-adtag-library.com/adtag/latest/pav2.min.js',function(){
+                    paAnalytics.push(['track', { eventName: 'adtagStarted' }]);
+                    config.analytics = paAnalytics;
+                    var myPAv2Ad = new PAv2(config);
+                    myPAv2Ad.display();
+                });
+            }
+        })();
